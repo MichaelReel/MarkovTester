@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://LoadDictionary.gd" type="Script" id=1]
+[ext_resource path="res://CreateChains.gd" type="Script" id=2]
+[ext_resource path="res://OutputList.gd" type="Script" id=3]
 
 [node name="Analyser" type="Panel"]
 anchor_right = 1.0
@@ -9,7 +11,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Button" type="Button" parent="."]
+[node name="SelectButton" type="Button" parent="."]
 margin_left = 25.6597
 margin_top = 26.8261
 margin_right = 157.66
@@ -19,7 +21,27 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="TextEdit" type="TextEdit" parent="."]
+[node name="CreateButton" type="Button" parent="."]
+margin_left = 172.0
+margin_top = 27.0
+margin_right = 329.0
+margin_bottom = 67.0
+text = "Create Chains"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RandomButton" type="Button" parent="."]
+margin_left = 693.0
+margin_top = 32.0
+margin_right = 994.0
+margin_bottom = 76.0
+text = "Create Random Strings"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="InputList" type="TextEdit" parent="."]
 margin_left = 23.0
 margin_top = 87.0
 margin_right = 334.0
@@ -29,7 +51,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="FileDialog" type="FileDialog" parent="TextEdit"]
+[node name="FileDialog" type="FileDialog" parent="InputList"]
 margin_right = 400.0
 margin_bottom = 300.0
 rect_min_size = Vector2( 400, 300 )
@@ -41,5 +63,29 @@ mode = 0
 filters = PoolStringArray( "*.txt" )
 current_dir = "res://samples"
 current_path = "res://samples/"
-[connection signal="pressed" from="Button" to="TextEdit" method="_on_Button_pressed"]
-[connection signal="file_selected" from="TextEdit/FileDialog" to="TextEdit" method="_on_FileDialog_file_selected"]
+
+[node name="ChainList" type="ItemList" parent="."]
+margin_left = 352.0
+margin_top = 25.0
+margin_right = 669.0
+margin_bottom = 575.0
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="OutputList" type="TextEdit" parent="."]
+margin_left = 686.0
+margin_top = 93.0
+margin_right = 1002.0
+margin_bottom = 569.0
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="pressed" from="SelectButton" to="InputList" method="_on_Button_Open_pressed"]
+[connection signal="pressed" from="CreateButton" to="InputList" method="_on_Button_Create_pressed"]
+[connection signal="pressed" from="RandomButton" to="ChainList" method="_on_RandomButton_pressed"]
+[connection signal="chain_input" from="InputList" to="ChainList" method="_on_InputList_chain_input"]
+[connection signal="file_selected" from="InputList/FileDialog" to="InputList" method="_on_FileDialog_file_selected"]
+[connection signal="created_random_strings" from="ChainList" to="OutputList" method="_on_ChainList_created_random_strings"]
