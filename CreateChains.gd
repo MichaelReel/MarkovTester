@@ -126,6 +126,7 @@ func new_item_added(start : String, end : String):
 
 func _on_RandomButton_pressed():
 	var text := ""
+	seed(OS.get_system_time_msecs())
 	for _i in range (0, 100):
 		text += table.make_random_word() + "\n"
 	emit_signal("created_random_strings", text)
