@@ -2,8 +2,8 @@ extends TextEdit
 
 onready var popup := $FileDialog
 
-signal chain_input
-signal input_available
+signal chain_input(text)
+signal input_available(available)
 
 func _on_Button_Open_pressed():
 	popup.popup()

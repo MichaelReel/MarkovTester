@@ -30,7 +30,7 @@ margin_right = 405.0
 margin_bottom = 65.0
 text = "3 Letters"
 clip_text = true
-items = [ "1 Letter", null, false, 0, null, "2 Letters", null, false, 1, null, "3 Letters", null, false, 2, null, "Consonant Vowel Consonant", null, false, 3, null, "To Constonant", null, false, 4, null ]
+items = [ "1 Letter", null, false, 0, null, "2 Letters", null, false, 1, null, "3 Letters", null, false, 2, null, "Consonant Vowel Consonant", null, false, 3, null, "To Constonant", null, false, 4, null, "Custom", null, false, 5, null ]
 selected = 2
 __meta__ = {
 "_edit_use_anchors_": false
@@ -121,11 +121,13 @@ __meta__ = {
 [connection signal="pressed" from="SelectButton" to="InputList" method="_on_Button_Open_pressed"]
 [connection signal="item_selected" from="SplitModeButton" to="ChainList" method="_on_SplitModeButton_item_selected"]
 [connection signal="pressed" from="RandomButton" to="ChainList" method="_on_RandomButton_pressed"]
-[connection signal="chain_input" from="InputList" to="InputList" method="_on_InputList_chain_input"]
 [connection signal="chain_input" from="InputList" to="ChainList" method="_on_InputList_chain_input"]
 [connection signal="input_available" from="InputList" to="CreateButton" method="_on_InputList_input_available"]
 [connection signal="text_changed" from="InputList" to="InputList" method="_on_InputList_text_changed"]
 [connection signal="file_selected" from="InputList/FileDialog" to="InputList" method="_on_FileDialog_file_selected"]
 [connection signal="pressed" from="CreateButton" to="InputList" method="_on_Button_Create_pressed"]
+[connection signal="regex_updated" from="RegexEdit" to="ChainList" method="_on_RegexEdit_regex_updated"]
+[connection signal="text_changed" from="RegexEdit" to="RegexEdit" method="_on_RegexEdit_text_changed"]
 [connection signal="created_random_strings" from="ChainList" to="OutputList" method="_on_ChainList_created_random_strings"]
+[connection signal="regex_required" from="ChainList" to="RegexEdit" method="_on_ChainList_regex_required"]
 [connection signal="regex_selected" from="ChainList" to="RegexEdit" method="_on_ChainList_regex_selected"]

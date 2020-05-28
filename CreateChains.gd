@@ -1,7 +1,8 @@
 extends ItemList
 
-signal created_random_strings
-signal regex_selected
+signal created_random_strings(text)
+signal regex_selected(regex)
+signal regex_required(regex)
 
 const ID_MODE_MAP : Array = [
 	"1letter",
@@ -9,6 +10,7 @@ const ID_MODE_MAP : Array = [
 	"3letter",
 	"cvc",
 	"consonants",
+	"custom",
 ]
 
 const MODE_TO_REGEX_MAP : Dictionary = {
@@ -17,6 +19,7 @@ const MODE_TO_REGEX_MAP : Dictionary = {
 	"3letter"    : ".{3}",
 	"cvc"        : "[bcdfghjklmnpqrstvwxyz][aeiou]*[bcdfghjklmnpqrstvwxyz]",
 	"consonants" : "[aeiou]*[bcdfghjklmnpqrstvwxyz]{1}",
+	"custom"     : null,
 }
 
 var table : MarkovTable
@@ -125,4 +128,12 @@ func _on_RandomButton_pressed():
 
 func _on_SplitModeButton_item_selected(id : int):
 	mode = ID_MODE_MAP[id]
-	emit_signal("regex_selected", MODE_TO_REGEX_MAP[mode])
+	print ("id " + str(id) + " for mode " + mode)
+	if mode == "custom":
+		emit_signal("regex_required", MODE_TO_REGEX_MAP[mode])
+	else:
+		emit_signal("regex_selected", MODE_TO_REGEX_MAP[mode])
+
+func _on_RegexEdit_regex_updated(text : String):
+	print ("updating regex")
+	MODE_TO_REGEX_MAP["custom"] = text
