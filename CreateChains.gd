@@ -1,7 +1,7 @@
 extends ItemList
 
 signal created_random_strings
-
+signal regex_selected
 
 const ID_MODE_MAP : Array = [
 	"1letter",
@@ -10,6 +10,14 @@ const ID_MODE_MAP : Array = [
 	"cvc",
 	"consonants",
 ]
+
+const MODE_TO_REGEX_MAP : Dictionary = {
+	"1letter"    : ".{1}",
+	"2letter"    : ".{2}",
+	"3letter"    : ".{3}",
+	"cvc"        : "[bcdfghjklmnpqrstvwxyz][aeiou]*[bcdfghjklmnpqrstvwxyz]",
+	"consonants" : "[aeiou]*[bcdfghjklmnpqrstvwxyz]{1}",
+}
 
 var table : MarkovTable
 var mode : String = ID_MODE_MAP[2]
@@ -50,22 +58,7 @@ class MarkovTable:
 				insert_word(line, split)
 
 	func insert_word(word : String, split : String):
-		match split:
-			"1letter":
-#				split_letter(word)
-				split_by_regex(word, "(.{1})")
-			"2letter":
-#				split_multiletter(word, 2)
-				split_by_regex(word, "(.{2})")
-			"3letter":
-#				split_multiletter(word, 3)
-				split_by_regex(word, "(.{3})")
-			"cvc":
-				split_by_regex(word, "([bcdfghjklmnpqrstvwxyz][aeiou]*[bcdfghjklmnpqrstvwxyz])")
-			"consonants":
-				split_by_regex(word, "([aeiou]*[bcdfghjklmnpqrstvwxyz]{1})")
-			_:
-				split_by_regex(word, split)
+		split_by_regex(word, split)
 
 	func split_by_regex(word_in : String, regex : String):
 		var filter := RegEx.new()
@@ -117,7 +110,7 @@ class MarkovTable:
 
 func _on_InputList_chain_input(text : String):
 	self.clear()
-	table = MarkovTable.new(text, funcref(self, "new_item_added"), mode)
+	table = MarkovTable.new(text, funcref(self, "new_item_added"), MODE_TO_REGEX_MAP[mode])
 	sort_items_by_text()
 
 func new_item_added(start : String, end : String):
@@ -132,3 +125,4 @@ func _on_RandomButton_pressed():
 
 func _on_SplitModeButton_item_selected(id : int):
 	mode = ID_MODE_MAP[id]
+	emit_signal("regex_selected", MODE_TO_REGEX_MAP[mode])

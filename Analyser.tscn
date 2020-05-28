@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://LoadDictionary.gd" type="Script" id=1]
 [ext_resource path="res://CreateChains.gd" type="Script" id=2]
 [ext_resource path="res://OutputList.gd" type="Script" id=3]
+[ext_resource path="res://RegexEdit.gd" type="Script" id=4]
 
 [node name="Analyser" type="Panel"]
 anchor_right = 1.0
@@ -26,17 +27,10 @@ margin_left = 195.0
 margin_top = 25.0
 margin_right = 405.0
 margin_bottom = 65.0
-text = "Consonant Vowel Consonant"
+text = "3 Letters"
 clip_text = true
 items = [ "1 Letter", null, false, 0, null, "2 Letters", null, false, 1, null, "3 Letters", null, false, 2, null, "Consonant Vowel Consonant", null, false, 3, null, "To Constonant", null, false, 4, null ]
-selected = 3
-
-[node name="CreateButton" type="Button" parent="."]
-margin_left = 360.0
-margin_top = 85.0
-margin_right = 506.0
-margin_bottom = 125.0
-text = "Create Chains"
+selected = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -74,6 +68,34 @@ filters = PoolStringArray( "*.txt" )
 current_dir = "res://samples"
 current_path = "res://samples/"
 
+[node name="CreateButton" type="Button" parent="."]
+margin_left = 360.0
+margin_top = 85.0
+margin_right = 506.0
+margin_bottom = 125.0
+text = "Create Chains"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RegexEdit" type="TextEdit" parent="."]
+anchor_left = 0.41
+anchor_top = 0.04
+anchor_right = 0.41
+anchor_bottom = 0.04
+margin_left = 0.159973
+margin_top = 0.999998
+margin_right = 240.16
+margin_bottom = 43.0
+text = "Barp"
+readonly = true
+draw_tabs = true
+draw_spaces = true
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="ChainList" type="ItemList" parent="."]
 margin_left = 360.0
 margin_top = 145.0
@@ -95,8 +117,9 @@ __meta__ = {
 }
 [connection signal="pressed" from="SelectButton" to="InputList" method="_on_Button_Open_pressed"]
 [connection signal="item_selected" from="SplitModeButton" to="ChainList" method="_on_SplitModeButton_item_selected"]
-[connection signal="pressed" from="CreateButton" to="InputList" method="_on_Button_Create_pressed"]
 [connection signal="pressed" from="RandomButton" to="ChainList" method="_on_RandomButton_pressed"]
 [connection signal="chain_input" from="InputList" to="ChainList" method="_on_InputList_chain_input"]
 [connection signal="file_selected" from="InputList/FileDialog" to="InputList" method="_on_FileDialog_file_selected"]
+[connection signal="pressed" from="CreateButton" to="InputList" method="_on_Button_Create_pressed"]
 [connection signal="created_random_strings" from="ChainList" to="OutputList" method="_on_ChainList_created_random_strings"]
+[connection signal="regex_selected" from="ChainList" to="RegexEdit" method="_on_ChainList_regex_selected"]
