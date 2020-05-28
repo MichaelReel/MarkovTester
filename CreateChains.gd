@@ -2,7 +2,17 @@ extends ItemList
 
 signal created_random_strings
 
+
+const ID_MODE_MAP : Array = [
+	"1letter",
+	"2letter",
+	"3letter",
+	"cvc",
+	"consonants",
+]
+
 var table : MarkovTable
+var mode : String = ID_MODE_MAP[2]
 
 class MarkovTable:
 	
@@ -42,36 +52,20 @@ class MarkovTable:
 	func insert_word(word : String, split : String):
 		match split:
 			"1letter":
-				split_letter(word)
+#				split_letter(word)
+				split_by_regex(word, "(.{1})")
 			"2letter":
-				split_multiletter(word, 2)
+#				split_multiletter(word, 2)
+				split_by_regex(word, "(.{2})")
 			"3letter":
-				split_multiletter(word, 3)
-			"consonants":
-				split_by_regex(word, "([aeiou]*[bcdfghjklmnpqrstvwxyz]{1})")
+#				split_multiletter(word, 3)
+				split_by_regex(word, "(.{3})")
 			"cvc":
 				split_by_regex(word, "([bcdfghjklmnpqrstvwxyz][aeiou]*[bcdfghjklmnpqrstvwxyz])")
+			"consonants":
+				split_by_regex(word, "([aeiou]*[bcdfghjklmnpqrstvwxyz]{1})")
 			_:
 				split_by_regex(word, split)
-
-	func split_letter(word : String):
-		add_link(' ', word[0])
-		add_link(word[-1], ' ')
-		for i in range(0, word.length() - 1):
-			var a := word[i]
-			var b := word[i + 1]
-			add_link(a, b)
-	
-	func split_multiletter(word_in : String, n : int):
-		var word : Array = []
-		for i in range(0, word_in.length(), n):
-			word.append(word_in.substr(i, n))
-		add_link(' ', word[0])
-		add_link(word[-1], ' ')
-		for i in range(0, word.size() - 1):
-			var a : String = word[i]
-			var b : String = word[i + 1]
-			add_link(a, b)
 
 	func split_by_regex(word_in : String, regex : String):
 		var filter := RegEx.new()
@@ -80,6 +74,11 @@ class MarkovTable:
 			callback.call_func("\t", "Regex error. Exp: " + regex + ", Err-code: " + err)
 			return
 		var word : Array = filter.search_all(word_in)
+		if (word.empty()):
+			# Somethings might not fit the rules
+			add_link(' ', word_in)
+			add_link(word_in, ' ')
+			return
 		add_link(' ', word[0].get_string())
 		add_link(word[-1].get_string(), ' ')
 		for i in range(0, word.size() - 1):
@@ -118,7 +117,7 @@ class MarkovTable:
 
 func _on_InputList_chain_input(text : String):
 	self.clear()
-	table = MarkovTable.new(text, funcref(self, "new_item_added"), "3letter")
+	table = MarkovTable.new(text, funcref(self, "new_item_added"), mode)
 	sort_items_by_text()
 
 func new_item_added(start : String, end : String):
@@ -130,3 +129,6 @@ func _on_RandomButton_pressed():
 	for _i in range (0, 100):
 		text += table.make_random_word() + "\n"
 	emit_signal("created_random_strings", text)
+
+func _on_SplitModeButton_item_selected(id : int):
+	mode = ID_MODE_MAP[id]

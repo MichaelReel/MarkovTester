@@ -14,27 +14,37 @@ __meta__ = {
 [node name="SelectButton" type="Button" parent="."]
 margin_left = 25.0
 margin_top = 25.0
-margin_right = 165.0
+margin_right = 170.0
 margin_bottom = 65.0
 text = "Select Dictionary..."
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="CreateButton" type="Button" parent="."]
-margin_left = 175.0
+[node name="SplitModeButton" type="OptionButton" parent="."]
+margin_left = 195.0
 margin_top = 25.0
-margin_right = 325.0
+margin_right = 405.0
 margin_bottom = 65.0
+text = "Consonant Vowel Consonant"
+clip_text = true
+items = [ "1 Letter", null, false, 0, null, "2 Letters", null, false, 1, null, "3 Letters", null, false, 2, null, "Consonant Vowel Consonant", null, false, 3, null, "To Constonant", null, false, 4, null ]
+selected = 3
+
+[node name="CreateButton" type="Button" parent="."]
+margin_left = 360.0
+margin_top = 85.0
+margin_right = 506.0
+margin_bottom = 125.0
 text = "Create Chains"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="RandomButton" type="Button" parent="."]
-margin_left = 685.0
+margin_left = 695.0
 margin_top = 25.0
-margin_right = 985.0
+margin_right = 995.0
 margin_bottom = 65.0
 text = "Create Random Strings"
 __meta__ = {
@@ -65,9 +75,9 @@ current_dir = "res://samples"
 current_path = "res://samples/"
 
 [node name="ChainList" type="ItemList" parent="."]
-margin_left = 355.0
-margin_top = 85.0
-margin_right = 655.0
+margin_left = 360.0
+margin_top = 145.0
+margin_right = 660.0
 margin_bottom = 575.0
 script = ExtResource( 2 )
 __meta__ = {
@@ -75,15 +85,16 @@ __meta__ = {
 }
 
 [node name="OutputList" type="TextEdit" parent="."]
-margin_left = 685.0
+margin_left = 695.0
 margin_top = 85.0
-margin_right = 985.0
+margin_right = 995.0
 margin_bottom = 575.0
 script = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 [connection signal="pressed" from="SelectButton" to="InputList" method="_on_Button_Open_pressed"]
+[connection signal="item_selected" from="SplitModeButton" to="ChainList" method="_on_SplitModeButton_item_selected"]
 [connection signal="pressed" from="CreateButton" to="InputList" method="_on_Button_Create_pressed"]
 [connection signal="pressed" from="RandomButton" to="ChainList" method="_on_RandomButton_pressed"]
 [connection signal="chain_input" from="InputList" to="ChainList" method="_on_InputList_chain_input"]
