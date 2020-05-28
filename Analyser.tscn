@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://LoadDictionary.gd" type="Script" id=1]
 [ext_resource path="res://CreateChains.gd" type="Script" id=2]
 [ext_resource path="res://OutputList.gd" type="Script" id=3]
 [ext_resource path="res://RegexEdit.gd" type="Script" id=4]
+[ext_resource path="res://CreateButton.gd" type="Script" id=5]
 
 [node name="Analyser" type="Panel"]
 anchor_right = 1.0
@@ -73,7 +74,9 @@ margin_left = 360.0
 margin_top = 85.0
 margin_right = 506.0
 margin_bottom = 125.0
+disabled = true
 text = "Create Chains"
+script = ExtResource( 5 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -87,7 +90,7 @@ margin_left = 0.159973
 margin_top = 0.999998
 margin_right = 240.16
 margin_bottom = 43.0
-text = "Barp"
+text = ".{3}"
 readonly = true
 draw_tabs = true
 draw_spaces = true
@@ -118,7 +121,10 @@ __meta__ = {
 [connection signal="pressed" from="SelectButton" to="InputList" method="_on_Button_Open_pressed"]
 [connection signal="item_selected" from="SplitModeButton" to="ChainList" method="_on_SplitModeButton_item_selected"]
 [connection signal="pressed" from="RandomButton" to="ChainList" method="_on_RandomButton_pressed"]
+[connection signal="chain_input" from="InputList" to="InputList" method="_on_InputList_chain_input"]
 [connection signal="chain_input" from="InputList" to="ChainList" method="_on_InputList_chain_input"]
+[connection signal="input_available" from="InputList" to="CreateButton" method="_on_InputList_input_available"]
+[connection signal="text_changed" from="InputList" to="InputList" method="_on_InputList_text_changed"]
 [connection signal="file_selected" from="InputList/FileDialog" to="InputList" method="_on_FileDialog_file_selected"]
 [connection signal="pressed" from="CreateButton" to="InputList" method="_on_Button_Create_pressed"]
 [connection signal="created_random_strings" from="ChainList" to="OutputList" method="_on_ChainList_created_random_strings"]
