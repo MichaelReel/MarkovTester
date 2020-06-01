@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://LoadDictionary.gd" type="Script" id=1]
 [ext_resource path="res://CreateChains.gd" type="Script" id=2]
 [ext_resource path="res://OutputList.gd" type="Script" id=3]
 [ext_resource path="res://RegexEdit.gd" type="Script" id=4]
 [ext_resource path="res://CreateButton.gd" type="Script" id=5]
+[ext_resource path="res://RandomButton.gd" type="Script" id=6]
 
 [node name="Analyser" type="Panel"]
 anchor_right = 1.0
@@ -41,7 +42,9 @@ margin_left = 695.0
 margin_top = 25.0
 margin_right = 995.0
 margin_bottom = 65.0
+disabled = true
 text = "Create Random Strings"
+script = ExtResource( 6 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -65,9 +68,11 @@ window_title = "Open a File"
 resizable = true
 dialog_text = "Open Dictionary File"
 mode = 0
+access = 2
 filters = PoolStringArray( "*.txt" )
-current_dir = "res://samples"
-current_path = "res://samples/"
+current_dir = "/"
+current_file = "."
+current_path = "/."
 
 [node name="CreateButton" type="Button" parent="."]
 margin_left = 360.0
@@ -131,3 +136,4 @@ __meta__ = {
 [connection signal="created_random_strings" from="ChainList" to="OutputList" method="_on_ChainList_created_random_strings"]
 [connection signal="regex_required" from="ChainList" to="RegexEdit" method="_on_ChainList_regex_required"]
 [connection signal="regex_selected" from="ChainList" to="RegexEdit" method="_on_ChainList_regex_selected"]
+[connection signal="table_created" from="ChainList" to="RandomButton" method="_on_ChainList_table_created"]

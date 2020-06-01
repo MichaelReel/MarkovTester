@@ -3,6 +3,7 @@ extends ItemList
 signal created_random_strings(text)
 signal regex_selected(regex)
 signal regex_required(regex)
+signal table_created(has_entries)
 
 const ID_MODE_MAP : Array = [
 	"1letter",
@@ -115,6 +116,7 @@ func _on_InputList_chain_input(text : String):
 	self.clear()
 	table = MarkovTable.new(text, funcref(self, "new_item_added"), MODE_TO_REGEX_MAP[mode])
 	sort_items_by_text()
+	emit_signal("table_created", table != null and not table.links.empty())
 
 func new_item_added(start : String, end : String):
 	add_item("'" + start + "' -> '" + end + "'")
@@ -122,7 +124,9 @@ func new_item_added(start : String, end : String):
 func _on_RandomButton_pressed():
 	var text := ""
 	seed(OS.get_system_time_msecs())
-	for _i in range (0, 100):
+	if table == null:
+		return
+	for _i in range (0, 25):
 		text += table.make_random_word() + "\n"
 	emit_signal("created_random_strings", text)
 
