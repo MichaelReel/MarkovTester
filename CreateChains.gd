@@ -13,7 +13,6 @@ const ID_MODE_MAP : Array = [
 	"consonants",
 	"custom",
 ]
-
 const MODE_TO_REGEX_MAP : Dictionary = {
 	"1letter"    : ".{1}",
 	"2letter"    : ".{2}",
@@ -22,9 +21,12 @@ const MODE_TO_REGEX_MAP : Dictionary = {
 	"consonants" : "[aeiou]*[bcdfghjklmnpqrstvwxyz]{1}",
 	"custom"     : null,
 }
+const EXCLUSION_FAIL_LIMIT : int = 1000
+const OUTPUT_LIST_LENGTH : int = 20
 
 var table : MarkovTable
 var mode : String = ID_MODE_MAP[2]
+var exclude_inputs : bool = false
 
 class MarkovTable:
 	
@@ -32,6 +34,7 @@ class MarkovTable:
 	var totals : Dictionary
 	var headers : Array
 	var callback : FuncRef
+	var input_list : Array
 	
 	func _init(input : String, add_item_callback : FuncRef, split : String = '1letter'):
 		"""
@@ -53,16 +56,20 @@ class MarkovTable:
 		totals = {}
 		headers = []
 		callback = add_item_callback
+		input_list = []
 		read_input_stream(input, split)
 
 	func read_input_stream(input : String, split : String):
 		for line in input.split("\n"):
-			line = line.strip_edges().to_lower()
+			line = line.strip_edges() # .to_lower()
 			if not line.empty():
 				insert_word(line, split)
 
 	func insert_word(word : String, split : String):
-		split_by_regex(word, split)
+		if not input_list.has(word):
+			var ind = input_list.bsearch(word)
+			input_list.insert(ind, word)
+			split_by_regex(word, split)
 
 	func split_by_regex(word_in : String, regex : String):
 		var filter := RegEx.new()
@@ -105,12 +112,16 @@ class MarkovTable:
 		while state != ' ':
 			state = get_random_linked_state(state)
 			word += state
-		return word
+		return word.strip_edges()
 
 	func get_random_linked_state(state : String) -> String:
 		var next_states : Array = links[state].keys()
 		var state_ind := randi() % next_states.size()
 		return next_states[state_ind]
+
+	func word_in_source(word : String) -> bool:
+		return input_list.has(word)
+
 
 func _on_InputList_chain_input(text : String):
 	self.clear()
@@ -126,18 +137,28 @@ func _on_RandomButton_pressed():
 	seed(OS.get_system_time_msecs())
 	if table == null:
 		return
-	for _i in range (0, 25):
-		text += table.make_random_word() + "\n"
+	for _i in range (0, OUTPUT_LIST_LENGTH):
+		var new_compilation := table.make_random_word()
+		# Try not to use words that came in the source
+		if exclude_inputs:
+			var give_up = EXCLUSION_FAIL_LIMIT
+			while give_up > 0 and table.word_in_source(new_compilation):
+				new_compilation = table.make_random_word()
+				give_up -= 1
+			if give_up <= 0:
+				new_compilation += " (could not exclude)"
+		text += new_compilation + "\n"
 	emit_signal("created_random_strings", text)
 
 func _on_SplitModeButton_item_selected(id : int):
 	mode = ID_MODE_MAP[id]
-	print ("id " + str(id) + " for mode " + mode)
 	if mode == "custom":
 		emit_signal("regex_required", MODE_TO_REGEX_MAP[mode])
 	else:
 		emit_signal("regex_selected", MODE_TO_REGEX_MAP[mode])
 
 func _on_RegexEdit_regex_updated(text : String):
-	print ("updating regex")
 	MODE_TO_REGEX_MAP["custom"] = text
+
+func _on_ExcludeDictionary_toggled(button_pressed : bool):
+	exclude_inputs = button_pressed

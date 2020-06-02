@@ -11,6 +11,7 @@
 anchor_right = 1.0
 anchor_bottom = 1.0
 __meta__ = {
+"_edit_lock_": true,
 "_edit_use_anchors_": false
 }
 
@@ -70,9 +71,6 @@ dialog_text = "Open Dictionary File"
 mode = 0
 access = 2
 filters = PoolStringArray( "*.txt" )
-current_dir = "/"
-current_file = "."
-current_path = "/."
 
 [node name="CreateButton" type="Button" parent="."]
 margin_left = 360.0
@@ -116,10 +114,20 @@ __meta__ = {
 
 [node name="OutputList" type="TextEdit" parent="."]
 margin_left = 695.0
-margin_top = 85.0
+margin_top = 145.0
 margin_right = 995.0
 margin_bottom = 575.0
 script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ExcludeDictionary" type="CheckBox" parent="."]
+margin_left = 695.0
+margin_top = 85.0
+margin_right = 995.0
+margin_bottom = 109.0
+text = "Exclude Dictionary Matches"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -137,3 +145,4 @@ __meta__ = {
 [connection signal="regex_required" from="ChainList" to="RegexEdit" method="_on_ChainList_regex_required"]
 [connection signal="regex_selected" from="ChainList" to="RegexEdit" method="_on_ChainList_regex_selected"]
 [connection signal="table_created" from="ChainList" to="RandomButton" method="_on_ChainList_table_created"]
+[connection signal="toggled" from="ExcludeDictionary" to="ChainList" method="_on_ExcludeDictionary_toggled"]
