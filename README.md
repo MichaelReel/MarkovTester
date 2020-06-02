@@ -14,7 +14,7 @@ Open the MarkovTester.x86_64 or MarkovTexter.exe file from a folder view.
 # Creating Chains
 Click the `Select Dictionary...` button and navigate to and select a dictionary .txt file.
 A dictionary file should be a plain text file that has a single data element (for example: a name) on each line.
-You can find sample dictionaries [here](https://github.com/MichaelReel/MarkovTester/samples).
+You can find sample dictionaries [here](https://github.com/MichaelReel/MarkovTester/tree/master/samples).
 
 Pick a regex (or create a custom one) to be used to analyse and break up each element. The default regex with split each word into 3 letter blocks.
 Click the `Create Chains` button to populate the links table.
